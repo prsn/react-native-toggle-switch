@@ -76,7 +76,7 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={false}/>
+        {/* <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={false}/> */}
         <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'green'}} active={true}/>
       </View>
     );

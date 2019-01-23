@@ -19,13 +19,25 @@ class Switch extends React.Component {
     this.setLeftWidth = this.setWithValues('left');
     this.SetRightWidth = this.setWithValues('right');
     this.setViewPortWidth = this.setWithValues('viewPort');
+    this.value = new Animated.Value(0);
+    this.lastLeft = 0;
   }
 
   toggleSwitch = () => {
-    this.setState(({ isActive }) => ({
-      isActive: !isActive
-    }));
+    this.animateSwitch(this.state.isActive, () => {
+      this.setState(({ isActive }) => ({
+        isActive: !isActive
+      }));
+    });
   }
+
+  animateSwitch = (value, cb = () => {}) => {
+    // this.value.setValue(0);
+    Animated.timing(this.value, {
+      toValue: value ? 1 : 0,
+      duration: 1000
+    }).start(cb); 
+  };
 
   setWithValues = key => event => {
     const width = event.nativeEvent.layout.width;
@@ -42,22 +54,32 @@ class Switch extends React.Component {
     const { width, isActive } = this.state;
     const left = isActive ? 0 : (width.left + 8) * -1;
     const viewWidth = Math.max(width.left, width.right) + width.indicator + 16;
+    const leftOpacity = this.value.interpolate({
+      inputRange:[0, 1],
+      outputRange: isActive? [0, 1] : [1, 0]
+    });
+    const translateX = this.value.interpolate({
+      inputRange: [0, 1],
+      outputRange: !isActive? [this.lastLeft, left] : [left, this.lastLeft]
+    });
+    console.log(isActive, left, this.lastLeft);
+    this.lastLeft = left;
     return (
       <TouchableWithoutFeedback onPress={this.toggleSwitch}>
         <View style={[styles.viewPort, { width: viewWidth }, { backgroundColor: isActive ? active : inactive }]} onLayout={ this.setViewPortWidth }>
-          <View style={[styles.container, {left, width: Math.max(width.left, width.right) * 2 + width.indicator + 16 }]}>
-            <View style={[styles.onText, { flex: on.length > off.length ? 0 : 1 }]} onLayout={ this.setLeftWidth }>
+          <Animated.View style={[styles.container, { transform: [{ translateX: translateX }]}, { width: Math.max(width.left, width.right) * 2 + width.indicator + 16 }]}>
+            <Animated.View style={[styles.onText, { flex: on.length > off.length ? 0 : 1 }, {opacity: leftOpacity}]} onLayout={ this.setLeftWidth }>
               <Text style={{alignSelf: 'center'}}>
                 {on}
               </Text>
-            </View>
+            </Animated.View>
             <View style={[styles.indicator, { backgroundColor: indicator }]}/>
-            <View style={[styles.offText, { flex: on.length > off.length ? 1 : 0 }]} onLayout={ this.SetRightWidth }>
+            <Animated.View style={[styles.offText, { flex: on.length > off.length ? 1 : 0 }, {opacity: leftOpacity}]} onLayout={ this.SetRightWidth }>
               <Text style={{alignSelf: 'center'}}>
                 {off}
               </Text>
-            </View>
-          </View>
+            </Animated.View>
+          </Animated.View>
         </View>
       </TouchableWithoutFeedback>
     );
