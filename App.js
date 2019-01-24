@@ -78,10 +78,11 @@ export default class App extends Component<Props> {
     return (
       <View style={styles.container}>
         {/* <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={false}/> */}
-        <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={true}/>
+        {/* <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={true}/> */}
         <ScrollSwitch
-          text={{on: 'PRES', off: 'ABSENT'}}
-          color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}}
+          text={{on: 'PRESENT', off: 'ABSENT', activeTextColor: 'white', inactiveTextColor: '#B7B8BA'}}
+          textStyle={{fontWeight: 'bold'}}
+          color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
           active={true}
           onValueChange={(val) => {
             console.log(val)
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     backgroundColor: '#F5FCFF',
-    marginTop: 20,
+    marginTop: 50,
     paddingLeft: 10
   },
   welcome: {
