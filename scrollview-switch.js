@@ -22,37 +22,37 @@ class ScrollSwitch extends React.Component {
       },
       isActive: this.props.active || false
     };
-    this.setLeftWidth = this.setDimensionhValues('left');
-    this.SetRightWidth = this.setDimensionhValues('right');
-    this.setViewPortWidth = this.setDimensionhValues('viewPort');
-    // this.value = new Animated.Value(1);
-    // this.lastLeft = 0;
+    this.setLeftWidth = this.setDimensionValues('left');
+    this.SetRightWidth = this.setDimensionValues('right');
+    this.setViewPortWidth = this.setDimensionValues('viewPort');
   }
 
   componentDidMount() {
     if (!this.props.active) {
+      // setTimeout(() => {
+      //   this.scrollRef.scrollToEnd({ animated: false });
+      // }, 500);
       this.toggleSwitch();
     }
   }
 
   toggleActive = (active) => {
     this.setState(({isActive}) => ({
-      isActive: active || !isActive
+      isActive: active === undefined? !isActive : active
     }), () => {
-      this.props.onValueChange(this.state.isActive);
+      this.props.onValueChange(active === undefined? this.state.isActive : active);
     });
   }
 
   toggleSwitch = () => {
     const { isActive } = this.state;
-    const { disabled } = this.props;
-    if(disabled)return;
     if (isActive) {
-      this.scrolRef.scrollToEnd();
+      this.scrollRef.scrollToEnd();
+      this.toggleActive(false);
     } else {
-      this.scrolRef.scrollTo({x: 0, y: 0, animated: true})
+      this.scrollRef.scrollTo({x: 0, y: 0, animated: true})
+      this.toggleActive(true);
     }
-    this.toggleActive();
   }
 
   animateSwitch = (value, cb = () => {}) => {
@@ -63,7 +63,7 @@ class ScrollSwitch extends React.Component {
     // }).start(cb); 
   };
 
-  setDimensionhValues = key => event => {
+  setDimensionValues = key => event => {
     const {width, height} = event.nativeEvent.layout;
     this.setState(prevState => ({
       width: {
@@ -82,22 +82,16 @@ class ScrollSwitch extends React.Component {
     const { width: { left, indicator }, isActive } = this.state;
     console.log(e.nativeEvent, contentOffset, left)
     if(contentOffset.x > left / 2) {
-      this.scrolRef.scrollToEnd();
+      this.scrollRef.scrollToEnd();
       this.toggleActive(false);
     } else {
-      this.scrolRef.scrollTo({x: 0, y: 0, animated: true})
+      this.scrollRef.scrollTo({x: 0, y: 0, animated: true})
       this.toggleActive(true);
     }
-    // this.setState({
-    //   opacity: 1
-    // });
     this.touchableOpacity.setOpacityTo(1,300);
   }
 
   onDragStart = (e) => {
-    // this.setState({
-    //   opacity: 0.5
-    // });
     this.touchableOpacity.setOpacityTo(0.5,300);
   }
 
@@ -113,7 +107,7 @@ class ScrollSwitch extends React.Component {
     const viewPortWidth = Math.max(width.left, width.right) + width.indicator + 10 + viewPortHeight / 2 + 3;
     
     return (
-      <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {ref => this.touchableOpacity = ref}>
+      <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {ref => this.touchableOpacity = ref} disabled={disabled}>
       <View
         style={[
           styles.viewPort,
@@ -132,11 +126,12 @@ class ScrollSwitch extends React.Component {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          ref={r => this.scrolRef = r}
+          ref={r => this.scrollRef = r}
           onScrollEndDrag={this.onDragEnd}
           onScrollBeginDrag={this.onDragStart}
           style={{ flexGrow: 1}}
           scrollEnabled={!disabled}
+          scrollsToTop={false}
         >
           <View
             style={[
@@ -161,7 +156,7 @@ class ScrollSwitch extends React.Component {
                 {on}
               </Text>
             </View>
-            <TouchableWithoutFeedback onPress={this.toggleSwitch}>
+            <TouchableWithoutFeedback onPress={this.toggleSwitch} disabled={disabled}>
               <View style={[styles.indicatorWrapper,  {justifyContent: isActive ? 'flex-end' : 'flex-start'}]}>
                 <View
                   style={[
