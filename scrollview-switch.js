@@ -45,6 +45,8 @@ class ScrollSwitch extends React.Component {
 
   toggleSwitch = () => {
     const { isActive } = this.state;
+    const { disabled } = this.props;
+    if(disabled)return;
     if (isActive) {
       this.scrolRef.scrollToEnd();
     } else {
@@ -100,7 +102,11 @@ class ScrollSwitch extends React.Component {
   }
 
   render() {
-    const { text: { on = 'ON', off = 'OFF', activeTextColor, inactiveTextColor }, color: { active, inactive, indicator, activeBorder, inactiveBorder }, textStyle = {}} = this.props;
+    const { text: { on = 'ON', off = 'OFF', activeTextColor, inactiveTextColor },
+     color: { active, inactive, indicator, activeBorder, inactiveBorder }, 
+     textStyle = {},
+     disabled = false
+    } = this.props;
     const { width, isActive, opacity, height: { viewPort: viewPortHeight } } = this.state;
     const left = isActive ? 0 : (width.left + 8) * -1;
     console.log(this.state);
@@ -115,7 +121,7 @@ class ScrollSwitch extends React.Component {
             width: viewPortWidth,
             // backgroundColor: 'transparent',
             opacity: 1,
-            borderColor: 'rgba(0,0,0,0.5)',
+            // borderColor: 'rgba(0,0,0,0.5)',
             borderRadius: viewPortHeight / 2,
             borderWidth: 2,
             borderColor: isActive ? activeBorder : inactiveBorder,
@@ -130,6 +136,7 @@ class ScrollSwitch extends React.Component {
           onScrollEndDrag={this.onDragEnd}
           onScrollBeginDrag={this.onDragStart}
           style={{ flexGrow: 1}}
+          scrollEnabled={!disabled}
         >
           <View
             style={[

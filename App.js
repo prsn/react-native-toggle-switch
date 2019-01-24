@@ -84,6 +84,7 @@ export default class App extends Component<Props> {
           textStyle={{fontWeight: 'bold'}}
           color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
           active={true}
+          disabled={true}
           onValueChange={(val) => {
             console.log(val)
           }}
