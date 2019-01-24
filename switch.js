@@ -19,7 +19,7 @@ class Switch extends React.Component {
     this.setLeftWidth = this.setWithValues('left');
     this.SetRightWidth = this.setWithValues('right');
     this.setViewPortWidth = this.setWithValues('viewPort');
-    this.value = new Animated.Value(0);
+    this.value = new Animated.Value(1);
     this.lastLeft = 0;
   }
 
@@ -54,7 +54,18 @@ class Switch extends React.Component {
     const { width, isActive } = this.state;
     const left = isActive ? 0 : (width.left + 8) * -1;
     const viewWidth = Math.max(width.left, width.right) + width.indicator + 16;
-    const leftOpacity = this.value.interpolate({
+    
+    const visibleToInvisible = this.value.interpolate({
+      inputRange:[0, 1],
+      outputRange: [1, 0]
+    });
+
+    const invisibleToVisible = this.value.interpolate({
+      inputRange:[0, 1],
+      outputRange: [0, 1]
+    });
+
+    const animatedOpacity = this.value.interpolate({
       inputRange:[0, 1],
       outputRange: isActive? [0, 1] : [1, 0]
     });
@@ -66,15 +77,17 @@ class Switch extends React.Component {
     this.lastLeft = left;
     return (
       <TouchableWithoutFeedback onPress={this.toggleSwitch}>
-        <View style={[styles.viewPort, { width: viewWidth }, { backgroundColor: isActive ? active : inactive }]} onLayout={ this.setViewPortWidth }>
+        <View style={[styles.viewPort, { width: viewWidth }]} onLayout={ this.setViewPortWidth }>
           <Animated.View style={[styles.container, { transform: [{ translateX: translateX }]}, { width: Math.max(width.left, width.right) * 2 + width.indicator + 16 }]}>
-            <Animated.View style={[styles.onText, { flex: on.length > off.length ? 0 : 1 }, {opacity: leftOpacity}]} onLayout={ this.setLeftWidth }>
-              <Text style={{alignSelf: 'center'}}>
-                {on}
-              </Text>
+            <Animated.View style={[{ opacity: isActive ? invisibleToVisible : visibleToInvisible }, { backgroundColor: isActive ? active : inactive }]}>
+              <Animated.View style={[styles.onText, { flex: on.length > off.length ? 0 : 1 }, {opacity: isActive ? invisibleToVisible : visibleToInvisible}]} onLayout={ this.setLeftWidth }>
+                <Text style={{alignSelf: 'center'}}>
+                  {on}
+                </Text>
+              </Animated.View>
             </Animated.View>
             <View style={[styles.indicator, { backgroundColor: indicator }]}/>
-            <Animated.View style={[styles.offText, { flex: on.length > off.length ? 1 : 0 }, {opacity: leftOpacity}]} onLayout={ this.SetRightWidth }>
+            <Animated.View style={[styles.offText, { flex: on.length > off.length ? 1 : 0 }, {opacity: isActive ? invisibleToVisible : visibleToInvisible}]} onLayout={ this.SetRightWidth }>
               <Text style={{alignSelf: 'center'}}>
                 {off}
               </Text>
@@ -91,6 +104,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderColor: 'black',
     borderRadius: HEIGHT / 2,
+    borderWidth: 1,
     paddingTop: 2,
     paddingBottom: 2
   },

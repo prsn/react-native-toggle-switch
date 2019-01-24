@@ -11,6 +11,7 @@ import {Platform, StyleSheet, Text, View, Button, FlatList} from 'react-native';
 import AnimatedListItem from './animated-list-item';
 import AnimatedListItemWithNativeDriver from './animated-list-item-with-native-driver';
 import Switch from './switch';
+import ScrollSwitch from './scrollview-switch';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -77,7 +78,15 @@ export default class App extends Component<Props> {
     return (
       <View style={styles.container}>
         {/* <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={false}/> */}
-        <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'green'}} active={true}/>
+        <Switch text={{on: 'PRESENT', off: 'ABSENT'}} color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}} active={true}/>
+        <ScrollSwitch
+          text={{on: 'PRES', off: 'ABSENT'}}
+          color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)'}}
+          active={true}
+          onValueChange={(val) => {
+            console.log(val)
+          }}
+        />
       </View>
     );
   }
