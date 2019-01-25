@@ -27,8 +27,8 @@ class ScrollSwitch extends React.Component {
   async componentDidMount() {
     if (!this.props.active) {
       setTimeout(() => {
-        // this.scrollRef.scrollToEnd({ animated: false });
-      }, 500);
+        this.scrollRef.scrollToEnd({ animated: false });
+      }, 10);
       // this.toggleSwitch();
     }
   }
@@ -131,7 +131,7 @@ class ScrollSwitch extends React.Component {
           <View
             style={[
               styles.container,
-              { opacity },
+              { opacity, height:  this.props.radius * 2 +  this.wrapperIndicatorPadding * 2 },
               { backgroundColor: isActive? active: inactive  },
               
             ]}
