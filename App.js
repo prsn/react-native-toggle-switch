@@ -86,6 +86,8 @@ export default class App extends Component<Props> {
           color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
           active={false}
           disabled={false}
+          width={70}
+          radius={15}
           onValueChange={(val) => {
             console.log(val)
           }}
@@ -100,6 +102,8 @@ export default class App extends Component<Props> {
           color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
           active={true}
           disabled={false}
+          width={80}
+          radius={25}
           onValueChange={(val) => {
             console.log(val)
           }}

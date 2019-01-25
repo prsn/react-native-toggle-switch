@@ -6,23 +6,19 @@ class ScrollSwitch extends React.Component {
     super(...props);
     this.state = {
       width: {
-        left: 64,
-        right: 64,
-        indicator: INDICATOR_HEIGHT,
-        viewPort: 130
+        left: this.props.width
       },
-      height: {
-        left: 17,
-        right: 17,
-        indicator: INDICATOR_HEIGHT,
-        viewPort: 40
-      },
-      container: {
-        left: this.props.active ? 0 : 0,
-      },
+      // container: {
+      //   left: this.props.active ? 0 : 0,
+      // },
       isActive: this.props.active || false
     };
-    this.initailContentOffset = this.props.active ? 0 : 65 + HEIGHT / 2 + 3
+    this.borderWidth = 2;
+    this.wrapperIndicatorPadding = 2;
+    this.textMargin = 5;
+    this.outerRadius = (90/360) * 2 * 3.142 * this.props.radius;
+    this.viewPortWidth = this.props.width + this.outerRadius + (2 * this.props.radius) + ( 2 * this.wrapperIndicatorPadding) + this.textMargin + this.borderWidth * 2;
+    this.initailContentOffset = this.props.active ? 0 : this.props.width + this.outerRadius + this.textMargin;
     this.setLeftWidth = () => {};//this.setDimensionValues('left');
     this.SetRightWidth = () => {}; //this.setDimensionValues('right');
     this.setViewPortWidth = () => {};//this.setDimensionValues('viewPort');
@@ -80,6 +76,7 @@ class ScrollSwitch extends React.Component {
 
   onDragEnd = (e) => {
     const { contentOffset } = e.nativeEvent;
+    console.log(contentOffset.x);
     const { width: { left, indicator }, isActive } = this.state;
     console.log(e.nativeEvent, contentOffset, left)
     if(contentOffset.x > left / 2) {
@@ -102,10 +99,7 @@ class ScrollSwitch extends React.Component {
      textStyle = {},
      disabled = false
     } = this.props;
-    const { width, isActive, opacity, height: { viewPort: viewPortHeight } } = this.state;
-    const left = isActive ? 0 : (width.left + 8) * -1;
-    console.log(this.state);
-    const viewPortWidth = Math.max(width.left, width.right) + width.indicator + 10 + viewPortHeight / 2 + 3;
+    const { width, isActive, opacity  } = this.state;
     
     return (
       <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {ref => this.touchableOpacity = ref} disabled={disabled}>
@@ -113,11 +107,10 @@ class ScrollSwitch extends React.Component {
         style={[
           styles.viewPort,
           { 
-            width: viewPortWidth,
-            // backgroundColor: 'transparent',
+            width: this.viewPortWidth,
+            height: this.props.radius * 2 +  this.wrapperIndicatorPadding * 2 + this.borderWidth * 2,
             opacity: 1,
-            // borderColor: 'rgba(0,0,0,0.5)',
-            borderRadius: viewPortHeight / 2,
+            borderRadius: this.outerRadius,
             borderWidth: 2,
             borderColor: isActive ? activeBorder : inactiveBorder,
             backgroundColor: isActive? active: inactive
@@ -138,21 +131,22 @@ class ScrollSwitch extends React.Component {
           <View
             style={[
               styles.container,
-              { opacity, width: Math.max(width.left, width.right) * 2 + INDICATOR_HEIGHT + 5 + 10 + HEIGHT },
-              { backgroundColor: isActive? active: inactive },
+              { opacity },
+              { backgroundColor: isActive? active: inactive  },
               
             ]}
           >
             <View
               style={[
                 styles.activeView,
-                { flex: on.length > off.length ? 0 : 1 }
+                { 
+                  width: this.props.width,
+                  marginLeft: this.outerRadius
+                }
               ]}
-              onLayout={ this.setLeftWidth }
             >
               <Text 
                 style={[{alignSelf: 'center', 
-                flexGrow: on.length > off.length ? 0 : 1, 
                 textAlign: 'center',
                 color: isActive ? activeTextColor : inactiveTextColor
                 }, textStyle]}
@@ -161,11 +155,19 @@ class ScrollSwitch extends React.Component {
               </Text>
             </View>
             <TouchableWithoutFeedback onPress={this.toggleSwitch} disabled={disabled}>
-              <View style={[styles.indicatorWrapper,  {justifyContent: isActive ? 'flex-end' : 'flex-start'}]}>
+              <View style={[styles.indicatorWrapper, 
+                 {justifyContent: isActive ? 'flex-end' : 'flex-start',
+                 padding: this.wrapperIndicatorPadding 
+                 }]}>
                 <View
                   style={[
                     styles.indicator,
-                    { backgroundColor: indicator, borderColor: isActive ? active : inactive }
+                    { backgroundColor: indicator, 
+                      borderColor: isActive ? active : inactive,
+                      width: this.props.radius * 2,
+                      height: this.props.radius * 2,
+                      borderRadius: this.props.radius
+                    }
                   ]}
                 />
               </View>
@@ -173,12 +175,10 @@ class ScrollSwitch extends React.Component {
             <View
               style={[
                 styles.inactiveView,
-                { flex: on.length > off.length ? 1 : 0 }
+                { width: this.props.width, marginRight: this.outerRadius }
               ]}
-              onLayout={ this.SetRightWidth }
             >
               <Text style={[{ alignSelf: 'center', 
-              flexGrow: on.length > off.length ? 1 : 0,
                textAlign: 'center',
                color: isActive ? activeTextColor : inactiveTextColor
                }, textStyle]}>
@@ -201,41 +201,42 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     borderWidth: 1,
     backgroundColor: 'transparent',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    alignItems: 'center'
   },
   container: {
     position: 'relative',
     height: HEIGHT,
     padding: 0,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignSelf: 'center'
   },
   indicatorWrapper:{
-    width: INDICATOR_HEIGHT + 5,
-    height: INDICATOR_HEIGHT + 5,
-    borderRadius: (INDICATOR_HEIGHT + 5) / 2,
+    // width: INDICATOR_HEIGHT + 5,
+    // height: INDICATOR_HEIGHT + 5,
+    // borderRadius: (INDICATOR_HEIGHT + 5) / 2,
     flexDirection: 'row',
     alignItems: 'center'
   },
   indicator: {
-    width: INDICATOR_HEIGHT,
-    height: INDICATOR_HEIGHT,
-    borderRadius: INDICATOR_HEIGHT / 2,
+    // width: INDICATOR_HEIGHT,
+    // height: INDICATOR_HEIGHT,
+    // borderRadius: INDICATOR_HEIGHT / 2,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2
   },
   activeView: {
     marginRight: 5,
-    marginLeft: HEIGHT / 2,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   inactiveView: {
     marginLeft: 5,
-    marginRight: HEIGHT / 2,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
