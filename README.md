@@ -31,7 +31,7 @@ As first step we need to define the final boundary of the component, that is `Vi
 
 New we are placing the ScrollView inside the view port
 
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/VP-with-ScrollView.png)
+![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/vp-with-scrollView.png)
 
 Now we need main container which will hold all the pieces for the Switch component
 
@@ -45,7 +45,7 @@ Stage is set for us, next we need to place all the three pieces
 
 **Inactive View**
 
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/Inactive-view.png)
+![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/inactive-view.png)
 
 # Placing the contents
 Now that every thing is ready, all we need is to place the scroll position based on user action. Like if user tap on the component we need to toggle the state, we can do that by sending scroll position to either `scrollToTop` or `scrollToEnd` based on the state. If user slide, then we just need to toggle the state based on `contentOffset` only.
