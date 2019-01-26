@@ -29,7 +29,6 @@ class ScrollSwitch extends React.Component {
       setTimeout(() => {
         this.scrollRef.scrollToEnd({ animated: false });
       }, 10);
-      // this.toggleSwitch();
     }
   }
 
@@ -224,7 +223,8 @@ const styles = StyleSheet.create({
     // borderRadius: INDICATOR_HEIGHT / 2,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
-    shadowRadius: 2
+    shadowRadius: 2,
+    elevation: 5
   },
   activeView: {
     marginRight: 5,
