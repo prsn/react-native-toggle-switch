@@ -110,7 +110,7 @@ class ScrollSwitch extends React.Component {
             height: this.props.radius * 2 +  this.wrapperIndicatorPadding * 2 + this.borderWidth * 2,
             opacity: 1,
             borderRadius: this.outerRadius,
-            borderWidth: 2,
+            borderWidth: this.borderWidth,
             borderColor: isActive ? activeBorder : inactiveBorder,
             backgroundColor: isActive? active: inactive
           }
