@@ -77,8 +77,8 @@ class ScrollSwitch extends React.Component {
     const { contentOffset } = e.nativeEvent;
     console.log(contentOffset.x);
     const { width: { left, indicator }, isActive } = this.state;
-    console.log(e.nativeEvent, contentOffset, left)
-    if(contentOffset.x > left / 2) {
+    console.log(e.nativeEvent, contentOffset, contentOffset.x, this.props.width)
+    if(contentOffset.x > (this.props.width + this.outerRadius) / 2) {
       this.scrollRef.scrollToEnd();
       this.toggleActive(false);
     } else {
