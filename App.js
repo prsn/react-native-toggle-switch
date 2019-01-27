@@ -83,7 +83,7 @@ export default class App extends Component<Props> {
           key="1"
           text={{on: 'PRESENT', off: 'ABSENT', activeTextColor: 'white', inactiveTextColor: '#B7B8BA'}}
           textStyle={{fontWeight: 'bold'}}
-          color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
+          color={{indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba(32, 193, 173, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
           active={false}
           disabled={false}
           width={70}
@@ -95,7 +95,7 @@ export default class App extends Component<Props> {
         <View style={{height: 10}}>
 
         </View>
-        {/* <ScrollSwitch
+        <ScrollSwitch
           key="2"
           text={{on: 'PRESENT', off: 'ABSENT', activeTextColor: 'white', inactiveTextColor: '#B7B8BA'}}
           textStyle={{fontWeight: 'bold'}}
@@ -123,7 +123,7 @@ export default class App extends Component<Props> {
           onValueChange={(val) => {
             console.log(val)
           }}
-        /> */}
+        />
       </View>
     );
   }

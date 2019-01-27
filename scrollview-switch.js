@@ -5,23 +5,14 @@ class ScrollSwitch extends React.Component {
   constructor(...props) {
     super(...props);
     this.state = {
-      width: {
-        left: this.props.width
-      },
-      // container: {
-      //   left: this.props.active ? 0 : 0,
-      // },
       isActive: this.props.active || false
     };
     this.borderWidth = 2;
-    this.wrapperIndicatorPadding = 2;
+    this.universalPadding = 2;
+    this.viewPortRadius =  this.props.radius +  this.universalPadding; // (90/360) * 2 * 3.142 * this.props.radius;
     this.textMargin = 5;
-    this.outerRadius = (90/360) * 2 * 3.142 * this.props.radius;
-    this.viewPortWidth = this.props.width + this.outerRadius + (2 * this.props.radius) + ( 2 * this.wrapperIndicatorPadding) + this.textMargin + this.borderWidth * 2;
-    this.initailContentOffset = this.props.active ? 0 : this.props.width + this.outerRadius + this.textMargin;
-    this.setLeftWidth = () => {};//this.setDimensionValues('left');
-    this.SetRightWidth = () => {}; //this.setDimensionValues('right');
-    this.setViewPortWidth = () => {};//this.setDimensionValues('viewPort');
+    this.viewPortWidth = this.props.width + this.viewPortRadius + (2 * this.props.radius) + ( 2 * this.universalPadding) + this.textMargin;
+    this.initailContentOffset = this.props.active ? 0 : this.props.width + this.viewPortRadius + this.textMargin;
   }
 
   async componentDidMount() {
@@ -51,34 +42,11 @@ class ScrollSwitch extends React.Component {
     }
   }
 
-  animateSwitch = (value, cb = () => {}) => {
-    // this.value.setValue(0);
-    // Animated.timing(this.value, {
-    //   toValue: value ? 1 : 0,
-    //   duration: 1000
-    // }).start(cb); 
-  };
-
-  setDimensionValues = key => event => {
-    const {width, height} = event.nativeEvent.layout;
-    this.setState(prevState => ({
-      width: {
-        ...prevState.width,
-        [key]: width
-      },
-      height: {
-        ...prevState.height,
-        [key]: height
-      }
-    }))
-  }
-
   onDragEnd = (e) => {
     const { contentOffset } = e.nativeEvent;
     console.log(contentOffset.x);
-    const { width: { left, indicator }, isActive } = this.state;
     console.log(e.nativeEvent, contentOffset, contentOffset.x, this.props.width)
-    if(contentOffset.x > (this.props.width + this.outerRadius) / 2) {
+    if(contentOffset.x > (this.props.width + this.viewPortRadius) / 2) {
       this.scrollRef.scrollToEnd();
       this.toggleActive(false);
     } else {
@@ -107,15 +75,15 @@ class ScrollSwitch extends React.Component {
           styles.viewPort,
           { 
             width: this.viewPortWidth,
-            height: this.props.radius * 2 +  this.wrapperIndicatorPadding * 2 + this.borderWidth * 2,
+            height: this.props.radius * 2 +  this.universalPadding * 2,
             opacity: 1,
-            borderRadius: this.outerRadius,
+            borderRadius: this.viewPortRadius,
             borderWidth: this.borderWidth,
             borderColor: isActive ? activeBorder : inactiveBorder,
             backgroundColor: isActive? active: inactive
           }
         ]}
-        onLayout={ this.setViewPortWidth }>
+      >
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -126,11 +94,15 @@ class ScrollSwitch extends React.Component {
           scrollEnabled={!disabled}
           scrollsToTop={false}
           contentOffset={{x: this.initailContentOffset, y: 0}}
+          style={{ width: this.viewPortWidth }}
         >
           <View
             style={[
               styles.container,
-              { opacity, height:  this.props.radius * 2 +  this.wrapperIndicatorPadding * 2 },
+              { 
+                opacity,
+                height:  this.props.radius * 2 +  this.universalPadding * 2 
+              },
               { backgroundColor: isActive? active: inactive  },
               
             ]}
@@ -140,7 +112,7 @@ class ScrollSwitch extends React.Component {
                 styles.activeView,
                 { 
                   width: this.props.width,
-                  marginLeft: this.outerRadius
+                  marginLeft: this.viewPortRadius
                 }
               ]}
             >
@@ -156,7 +128,7 @@ class ScrollSwitch extends React.Component {
             <TouchableWithoutFeedback onPress={this.toggleSwitch} disabled={disabled}>
               <View style={[styles.indicatorWrapper, 
                  {justifyContent: isActive ? 'flex-end' : 'flex-start',
-                 padding: this.wrapperIndicatorPadding 
+                 padding: this.universalPadding 
                  }]}>
                 <View
                   style={[
@@ -174,7 +146,7 @@ class ScrollSwitch extends React.Component {
             <View
               style={[
                 styles.inactiveView,
-                { width: this.props.width, marginRight: this.outerRadius }
+                { width: this.props.width, marginRight: this.viewPortRadius }
               ]}
             >
               <Text style={[{ alignSelf: 'center', 
@@ -192,35 +164,25 @@ class ScrollSwitch extends React.Component {
   }
 }
 
-const HEIGHT = 36;
-const INDICATOR_HEIGHT = 32;
 const styles = StyleSheet.create({
   viewPort: {
     paddingTop: 0,
     paddingBottom: 0,
-    borderWidth: 1,
     backgroundColor: 'transparent',
     overflow: 'hidden',
     alignItems: 'center'
   },
   container: {
     position: 'relative',
-    height: HEIGHT,
     padding: 0,
     flexDirection: 'row',
     alignSelf: 'center'
   },
   indicatorWrapper:{
-    // width: INDICATOR_HEIGHT + 5,
-    // height: INDICATOR_HEIGHT + 5,
-    // borderRadius: (INDICATOR_HEIGHT + 5) / 2,
     flexDirection: 'row',
     alignItems: 'center'
   },
   indicator: {
-    // width: INDICATOR_HEIGHT,
-    // height: INDICATOR_HEIGHT,
-    // borderRadius: INDICATOR_HEIGHT / 2,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
