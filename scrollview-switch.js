@@ -18,7 +18,7 @@ class ScrollSwitch extends React.Component {
     this.universalPadding = 2;
     this.viewPortRadius =  this.props.radius +  this.universalPadding;
     this.textMargin = 5;
-    this.viewPortWidth = this.props.width + this.viewPortRadius + (2 * this.props.radius) + ( 2 * this.universalPadding) + this.textMargin;
+    this.viewPortWidth = this.props.width + this.viewPortRadius + (2 * this.props.radius) + (2 * this.universalPadding) + this.textMargin;
     this.initailContentOffset = this.props.active ? 0 : this.props.width + this.viewPortRadius + this.textMargin;
   }
 
