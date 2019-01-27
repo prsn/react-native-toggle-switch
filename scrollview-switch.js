@@ -1,5 +1,12 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableOpacity
+} from 'react-native';
 
 class ScrollSwitch extends React.Component {
   constructor(...props) {
@@ -9,7 +16,7 @@ class ScrollSwitch extends React.Component {
     };
     this.borderWidth = 2;
     this.universalPadding = 2;
-    this.viewPortRadius =  this.props.radius +  this.universalPadding; // (90/360) * 2 * 3.142 * this.props.radius;
+    this.viewPortRadius =  this.props.radius +  this.universalPadding;
     this.textMargin = 5;
     this.viewPortWidth = this.props.width + this.viewPortRadius + (2 * this.props.radius) + ( 2 * this.universalPadding) + this.textMargin;
     this.initailContentOffset = this.props.active ? 0 : this.props.width + this.viewPortRadius + this.textMargin;
@@ -23,11 +30,11 @@ class ScrollSwitch extends React.Component {
     }
   }
 
-  toggleActive = (active) => {
-    this.setState(({isActive}) => ({
-      isActive: active === undefined? !isActive : active
-    }), () => {
-      this.props.onValueChange(active === undefined? this.state.isActive : active);
+  updateState = (active) => {
+    this.setState({
+      isActive: active
+    }, () => {
+      this.props.onValueChange(active);
     });
   }
 
@@ -35,29 +42,27 @@ class ScrollSwitch extends React.Component {
     const { isActive } = this.state;
     if (isActive) {
       this.scrollRef.scrollToEnd();
-      this.toggleActive(false);
+      this.updateState(false);
     } else {
       this.scrollRef.scrollTo({x: 0, y: 0, animated: true})
-      this.toggleActive(true);
+      this.updateState(true);
     }
   }
 
   onDragEnd = (e) => {
     const { contentOffset } = e.nativeEvent;
-    console.log(contentOffset.x);
-    console.log(e.nativeEvent, contentOffset, contentOffset.x, this.props.width)
     if(contentOffset.x > (this.props.width + this.viewPortRadius) / 2) {
       this.scrollRef.scrollToEnd();
-      this.toggleActive(false);
+      this.updateState(false);
     } else {
       this.scrollRef.scrollTo({x: 0, y: 0, animated: true})
-      this.toggleActive(true);
+      this.updateState(true);
     }
-    this.touchableOpacity.setOpacityTo(1,300);
+    this.touchableOpacity.setOpacityTo(1, 300);
   }
 
   onDragStart = (e) => {
-    this.touchableOpacity.setOpacityTo(0.5,300);
+    this.touchableOpacity.setOpacityTo(0.5, 300);
   }
 
   render() {
@@ -66,7 +71,7 @@ class ScrollSwitch extends React.Component {
      textStyle = {},
      disabled = false
     } = this.props;
-    const { width, isActive, opacity  } = this.state;
+    const { isActive } = this.state;
     
     return (
       <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {ref => this.touchableOpacity = ref} disabled={disabled}>
@@ -90,7 +95,6 @@ class ScrollSwitch extends React.Component {
           ref={r => this.scrollRef = r}
           onScrollEndDrag={this.onDragEnd}
           onScrollBeginDrag={this.onDragStart}
-          style={{ flexGrow: 1}}
           scrollEnabled={!disabled}
           scrollsToTop={false}
           contentOffset={{x: this.initailContentOffset, y: 0}}
@@ -100,11 +104,10 @@ class ScrollSwitch extends React.Component {
             style={[
               styles.container,
               { 
-                opacity,
+                opacity: 1,
+                backgroundColor: isActive? active: inactive,
                 height:  this.props.radius * 2 +  this.universalPadding * 2 
-              },
-              { backgroundColor: isActive? active: inactive  },
-              
+              }
             ]}
           >
             <View
@@ -117,19 +120,27 @@ class ScrollSwitch extends React.Component {
               ]}
             >
               <Text 
-                style={[{alignSelf: 'center', 
-                textAlign: 'center',
-                color: isActive ? activeTextColor : inactiveTextColor
-                }, textStyle]}
+                style={[
+                  {
+                    alignSelf: 'center', 
+                    textAlign: 'center',
+                    color: isActive ? activeTextColor : inactiveTextColor
+                  },
+                  textStyle
+                ]}
               >
                 {on}
               </Text>
             </View>
             <TouchableWithoutFeedback onPress={this.toggleSwitch} disabled={disabled}>
-              <View style={[styles.indicatorWrapper, 
-                 {justifyContent: isActive ? 'flex-end' : 'flex-start',
-                 padding: this.universalPadding 
-                 }]}>
+              <View
+                style={[
+                  styles.indicatorWrapper,
+                  {
+                    justifyContent: isActive ? 'flex-end' : 'flex-start',
+                    padding: this.universalPadding 
+                  }
+                ]}>
                 <View
                   style={[
                     styles.indicator,
@@ -146,13 +157,20 @@ class ScrollSwitch extends React.Component {
             <View
               style={[
                 styles.inactiveView,
-                { width: this.props.width, marginRight: this.viewPortRadius }
+                { width: this.props.width,
+                  marginRight: this.viewPortRadius
+                }
               ]}
             >
-              <Text style={[{ alignSelf: 'center', 
-               textAlign: 'center',
-               color: isActive ? activeTextColor : inactiveTextColor
-               }, textStyle]}>
+              <Text
+                style={[
+                {
+                  alignSelf: 'center', 
+                  textAlign: 'center',
+                  color: isActive ? activeTextColor : inactiveTextColor
+                },
+                textStyle
+              ]}>
                 {off}
               </Text>
             </View>
