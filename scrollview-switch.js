@@ -17,9 +17,9 @@ class ScrollSwitch extends React.Component {
     this.borderWidth = 2;
     this.universalPadding = 2;
     this.viewPortRadius =  this.props.radius +  this.universalPadding;
-    this.textMargin = 5;
-    this.viewPortWidth = this.props.width + this.viewPortRadius + (2 * this.props.radius) + (2 * this.universalPadding) + this.textMargin;
-    this.initailContentOffset = this.props.active ? 0 : this.props.width + this.viewPortRadius + this.textMargin;
+    this.textMargin = 8;
+    this.viewPortWidth = this.props.width + (2 * this.props.radius) + (2 * this.universalPadding) + this.textMargin;
+    this.initailContentOffset = this.props.active ? 0 : this.props.width  + this.textMargin;
   }
 
   async componentDidMount() {
@@ -51,7 +51,7 @@ class ScrollSwitch extends React.Component {
 
   onDragEnd = (e) => {
     const { contentOffset } = e.nativeEvent;
-    if(contentOffset.x > (this.props.width + this.viewPortRadius) / 2) {
+    if(contentOffset.x > (this.props.width ) / 2) {
       this.scrollRef.scrollToEnd();
       this.updateState(false);
     } else {
@@ -115,7 +115,7 @@ class ScrollSwitch extends React.Component {
                 styles.activeView,
                 { 
                   width: this.props.width,
-                  marginLeft: this.viewPortRadius
+                  // marginLeft: this.viewPortRadius
                 }
               ]}
             >
@@ -158,7 +158,7 @@ class ScrollSwitch extends React.Component {
               style={[
                 styles.inactiveView,
                 { width: this.props.width,
-                  marginRight: this.viewPortRadius
+                  // marginRight: this.viewPortRadius
                 }
               ]}
             >
@@ -207,13 +207,15 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   activeView: {
-    marginRight: 5,
+    marginRight: 3,
+    marginLeft: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
   },
   inactiveView: {
-    marginLeft: 5,
+    marginLeft: 3,
+    marginRight: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
