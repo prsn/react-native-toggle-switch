@@ -15,7 +15,7 @@ npm install --save rn-toggle-switch
 
 # Usages
 ```bash
-import ToggleSwitch from 'react-native-toggle-switch'
+import ToggleSwitch from 'rn-toggle-switch'
 
 class Demo extends ... {
   ...
