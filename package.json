@@ -1,5 +1,5 @@
 {
-  "name": "react-native-toggle-switch",
+  "name": "rn-toggle-switch",
   "version": "1.0.0",
   "description": "A toggle switch implementation using ScrollView",
   "main": "index.js",
