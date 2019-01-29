@@ -6,7 +6,7 @@ A simple approach to complex animation for toggle switch
 Toggle switches are quite common in almost every application. There are many switch components available out there and each one has it own desing. We were looking for a switch component that has label and slide behaviour. We did found a library that offer this behaviour, we were happy. But we also needed swip behaviour to toggle the state. We did find a llibrary that offer swip behaviour but it does not offer switch label. So we had to desing a new component to do the job.
 
 # Working demo
-![Screen Cast](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/demo.gif)
+<img src="https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/demo.gif" width="300" height="610"/>
 
 # Install
 ```bash
