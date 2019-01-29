@@ -1,4 +1,3 @@
-**DRAFT VERSION**
 # react-native-toggle-switch
 A simple approach to complex animation for toggle switch
 
@@ -7,49 +6,59 @@ A simple approach to complex animation for toggle switch
 Toggle switches are quite common in almost every application. There are many switch components available out there and each one has it own desing. We were looking for a switch component that has label and slide behaviour. We did found a library that offer this behaviour, we were happy. But we also needed swip behaviour to toggle the state. We did find a llibrary that offer swip behaviour but it does not offer switch label. So we had to desing a new component to do the job.
 
 # Working demo
+![Screen Cast](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/demo.gif)
 
-# Install (Not availabel in NPM now)
+# Install
 ```bash
 npm install --save react-native-toggle-switch
 ```
 
 # Usages
-// TODO
+```bash
+import ToggleSwitch from 'react-native-toggle-switch'
+
+class Demo extends ... {
+  ...
+  render() {
+    return (
+      ...
+      <ToggleSwitch
+        text={{on: 'PRESENT', off: 'ABSENT', activeTextColor: 'white', inactiveTextColor: '#B7B8BA'}}
+        textStyle={{fontWeight: 'bold'}}
+        color={{ indicator: 'white', active: 'rgba(32, 193, 173, 1)', inactive:  'rgba( 247, 247, 247, 1)', activeBorder: '#41B4A4', inactiveBorder: '#E9E9E9'}}
+        active={true}
+        disabled={false}
+        width={80}
+        radius={25}
+        onValueChange={(val) => {
+          /* your handler function... */
+        }}
+      />
+      ...
+    );
+  }
+}
+```
 
 # Properties
-// TODO
 
-# Implementation approach
-Initiall we tought to create the component using Animated library and do whatever needed to accomplish the task. Then we step back a bit and thought is there any feature/behaviour available in RN that we can use to desing the switch component. The answers is YES, RN does has a component, the ScrollView component. Sounds great, ScrollView by default provides swipable behaviour (:heart_eyes: we are free from any kind of animation), we can align ScrollView horizontally, we can get ride of scroll bar as well, we can move the conent to left or to right just using ScrollView's API calls. ScrollView seems to be a perfect fit for a Switch like component.
-
-# Design Implementation details
-Please consider the following diagrams to understand the desing
-
-As first step we need to define the final boundary of the component, that is `View-Port`, we can use `View` component for this.
-
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/view-port.png)
-
-New we are placing the ScrollView inside the view port
-
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/vp-with-scrollView.png)
-
-Now we need main container which will hold all the pieces for the Switch component
-
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/container.png)
-
-Stage is set for us, next we need to place all the three pieces
-
-**Active View**
-
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/active-view.png)
-
-**Inactive View**
-
-![alt text](https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/inactive-view.png)
-
-# Placing the contents
-Now that every thing is ready, all we need is to place the scroll position based on user action. Like if user tap on the component we need to toggle the state, we can do that by sending scroll position to either `scrollToTop` or `scrollToEnd` based on the state. If user slide, then we just need to toggle the state based on `contentOffset` only.
-
+| Attribute | Description |
+| --- | --- |
+| text.on | Text to be displayed when Switch is in Active state |
+| text.off | Text to be displayed when Switch in in inactive state |
+| text.activeTextColor | Active text color |
+| text.inactiveTextColor | Inactive text color |
+| textStyle | Any valid text style supported by RN |
+| color.indicator | The color of the Slider / Indicator |
+| color.active | Background color of the Switch when it is in active state |
+| color.inactive | Background color of the Switch when it is in inactive state |
+| color.activeBorder | The border color when Switch is in active state |
+| color.inactiveBorder | The border color when Switch is in inactive state |
+| active | Initial state of the Switch |
+| disabled | true if the control is disabled |
+| width | Width of the control |
+| radius | Radius of the Slider / Indicator |
+| onValueChange | The function to be called when Switch changes its states |
 
 # Contribution
 Pease feel free to create issue and raise PR :blush:

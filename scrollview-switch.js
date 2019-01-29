@@ -8,7 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-class ScrollSwitch extends React.Component {
+class ToggleSwitch extends React.Component {
   constructor(...props) {
     super(...props);
     this.state = {
@@ -222,4 +222,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ScrollSwitch;
+export default ToggleSwitch;

@@ -1,16 +1,24 @@
 {
-  "name": "AnimatedFlatList",
-  "version": "0.0.1",
-  "private": true,
+  "name": "react-native-toggle-switch",
+  "version": "1.0.0",
+  "description": "A toggle switch implementation using ScrollView",
+  "main": "index.js",
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
-  "dependencies": {
-    "react": "16.6.3",
-    "react-native": "0.57.8"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prsn/react-native-toggle-switch.git"
   },
+  "author": "prsn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prsn/react-native-toggle-switch/issues"
+  },
+  "homepage": "https://github.com/prsn/react-native-toggle-switch#readme",
   "devDependencies": {
+    "react": "16.6.3",
+    "react-native": "0.57.8",
     "babel-jest": "23.6.0",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.51.1",
