@@ -10,7 +10,7 @@ Toggle switches are quite common in almost every application. There are many swi
 
 # Install
 ```bash
-npm install --save react-native-toggle-switch
+npm install --save rn-toggle-switch
 ```
 
 # Usages
