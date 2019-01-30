@@ -4,9 +4,9 @@ A toggle switch with a label inside, on top of that it animates smoothly.
 
 
 # Motivation
-Toggle switches are quite common in almost every application, and we have so many UX variotions of it.
-Based on different variations,different libraries with its own design and animation has been created.
-Our UX demanded a Toggle with a label, which has both click and slide behavior, none of the exisiting libraries offered this complete solution. 
+Toggle switches are quite common in almost every application, and we have so many UX variations of it.
+Based on different variations, different libraries with its own design and animation has been created.
+Our UX demanded a Toggle with a label, which has both click and slide behavior, none of the existing libraries offered this complete solution. 
 Some had the toggle behavior but the sliding behavior was missing, some had the swipe behavior but did not offer to have a label in it.
 This library has been created to fill that gap.
 
