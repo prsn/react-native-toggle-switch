@@ -1,9 +1,14 @@
 # react-native-toggle-switch
-A simple approach to complex animation for toggle switch
+A toggle switch with a label inside, on top of that it animates smoothly.
+*Click and drag* or just *click* it toggles either way.
 
 
 # Motivation
-Toggle switches are quite common in almost every application. There are many switch components available out there and each one has it own desing. We were looking for a switch component that has label and slide behaviour. We did found a library that offer this behaviour, we were happy. But we also needed swip behaviour to toggle the state. We did find a llibrary that offer swip behaviour but it does not offer switch label. So we had to desing a new component to do the job.
+Toggle switches are quite common in almost every application, and we have so many UX variotions of it.
+Based on different variations,different libraries with its own design and animation has been created.
+Our UX demanded a Toggle with a label, which has both click and slide behavior, none of the exisiting libraries offered this complete solution. 
+Some had the toggle behavior but the sliding behavior was missing, some had the swipe behavior but did not offer to have a label in it.
+This library has been created to fill that gap.
 
 # Working demo
 <img src="https://raw.githubusercontent.com/prsn/react-native-toggle-switch/master/resources/demo.gif" width="300" height="610"/>
