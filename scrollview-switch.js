@@ -5,7 +5,8 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native';
 
 class ToggleSwitch extends React.Component {
@@ -23,12 +24,20 @@ class ToggleSwitch extends React.Component {
   }
 
   async componentDidMount() {
-    if (!this.props.active) {
-      setTimeout(() => {
-        this.scrollRef.scrollToEnd({ animated: false });
+    if (!this.props.active && Platform.OS === 'android') {
+      // Android hack to push scroll view to end at the initial rendering...
+      this.intervalRef = setInterval(() => {
+        if (this.scrollRef) {
+          this.scrollRef.scrollToEnd({ animated: false });
+          clearInterval(this.intervalRef);
+        }
       }, 10);
     }
   }
+
+  setScrollViewRef = (ref) => this.scrollRef = ref
+
+  setTouchableRef = (ref) => this.touchableOpacity = ref
 
   updateState = (active) => {
     this.setState({
@@ -74,7 +83,7 @@ class ToggleSwitch extends React.Component {
     const { isActive } = this.state;
     
     return (
-      <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {ref => this.touchableOpacity = ref} disabled={disabled}>
+      <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {this.setTouchableRef} disabled={disabled}>
       <View
         style={[
           styles.viewPort,
@@ -92,7 +101,7 @@ class ToggleSwitch extends React.Component {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          ref={r => this.scrollRef = r}
+          ref={this.setScrollViewRef}
           onScrollEndDrag={this.onDragEnd}
           onScrollBeginDrag={this.onDragStart}
           scrollEnabled={!disabled}
