@@ -16,7 +16,7 @@ class ToggleSwitch extends React.Component {
       isActive: this.props.active || false
     };
     this.borderWidth = 2;
-    this.universalPadding = 2;
+    this.universalPadding = this.props.padding || 2;
     this.viewPortRadius =  this.props.radius +  this.universalPadding;
     this.textMargin = 8;
     this.viewPortWidth = this.props.width + (2 * this.props.radius) + (2 * this.universalPadding) + this.textMargin;
@@ -115,7 +115,7 @@ class ToggleSwitch extends React.Component {
               { 
                 opacity: 1,
                 backgroundColor: isActive? active: inactive,
-                height:  this.props.radius * 2 +  this.universalPadding * 2 
+                height:  this.props.radius * 2 +  this.universalPadding * 2
               }
             ]}
           >
