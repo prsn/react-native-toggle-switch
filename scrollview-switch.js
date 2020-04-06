@@ -76,7 +76,7 @@ class ToggleSwitch extends React.Component {
 
   render() {
     const { text: { on = 'ON', off = 'OFF', activeTextColor, inactiveTextColor },
-     color: { active, inactive, indicator, activeBorder, inactiveBorder }, 
+     color: { active, inactive, indicator, inactiveIndicator, activeBorder, inactiveBorder }, 
      textStyle = {},
      disabled = false
     } = this.props;
@@ -153,7 +153,7 @@ class ToggleSwitch extends React.Component {
                 <View
                   style={[
                     styles.indicator,
-                    { backgroundColor: indicator, 
+                    { backgroundColor: isActive ? indicator : inactiveIndicator || indicator, 
                       borderColor: isActive ? active : inactive,
                       width: this.props.radius * 2,
                       height: this.props.radius * 2,
