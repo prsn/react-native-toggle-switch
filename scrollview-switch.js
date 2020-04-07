@@ -13,7 +13,8 @@ class ToggleSwitch extends React.Component {
   constructor(...props) {
     super(...props);
     this.state = {
-      isActive: this.props.active || false
+      isActive: this.props.active || false,
+      isLaidOut: Platform.OS === 'ios',
     };
     this.borderWidth = 2;
     this.universalPadding = this.props.padding || 2;
@@ -23,16 +24,23 @@ class ToggleSwitch extends React.Component {
     this.initailContentOffset = this.props.active ? 0 : this.props.width  + this.textMargin;
   }
 
-  async componentDidMount() {
-    if (!this.props.active && Platform.OS === 'android') {
+  // async componentDidMount() {
+    // if (!this.props.active && Platform.OS === 'android') {
       // Android hack to push scroll view to end at the initial rendering...
-      this.intervalRef = setInterval(() => {
-        if (this.scrollRef) {
-          this.scrollRef.scrollToEnd({ animated: false });
-          clearInterval(this.intervalRef);
-        }
-      }, 10);
+      // this.intervalRef = setInterval(() => {
+      //   if (this.scrollRef) {
+      //     this.scrollRef.scrollToEnd({ animated: false });
+      //     clearInterval(this.intervalRef);
+      //   }
+      // }, 10);
+    // }
+  // }
+
+  onScrollViewContentSizeChange = () => {
+    if (this.scrollRef && !this.props.active && Platform.OS === 'android') {
+      this.scrollRef.scrollToEnd({ animated: false });
     }
+    this.setState({ isLaidOut: true })
   }
 
   setScrollViewRef = (ref) => this.scrollRef = ref
@@ -80,7 +88,7 @@ class ToggleSwitch extends React.Component {
      textStyle = {},
      disabled = false
     } = this.props;
-    const { isActive } = this.state;
+    const { isActive, isLaidOut } = this.state;
     
     return (
       <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {this.setTouchableRef} disabled={disabled}>
@@ -107,6 +115,8 @@ class ToggleSwitch extends React.Component {
           scrollEnabled={!disabled}
           scrollsToTop={false}
           contentOffset={{x: this.initailContentOffset, y: 0}}
+          onContentSizeChange={this.onScrollViewContentSizeChange}
+
           style={{ width: this.viewPortWidth }}
         >
           <View
@@ -124,6 +134,7 @@ class ToggleSwitch extends React.Component {
                 styles.activeView,
                 { 
                   width: this.props.width,
+                  opacity: isLaidOut ? 1 : 0,
                   // marginLeft: this.viewPortRadius
                 }
               ]}
@@ -147,7 +158,8 @@ class ToggleSwitch extends React.Component {
                   styles.indicatorWrapper,
                   {
                     justifyContent: isActive ? 'flex-end' : 'flex-start',
-                    padding: this.universalPadding 
+                    padding: this.universalPadding,
+                    opacity: isLaidOut ? 1 : 0,
                   }
                 ]}>
                 <View
@@ -167,6 +179,7 @@ class ToggleSwitch extends React.Component {
               style={[
                 styles.inactiveView,
                 { width: this.props.width,
+                  opacity: isLaidOut ? 1 : 0,
                   // marginRight: this.viewPortRadius
                 }
               ]}
