@@ -85,6 +85,7 @@ class ToggleSwitch extends React.Component {
   render() {
     const { text: { on = 'ON', off = 'OFF', activeTextColor, inactiveTextColor },
      color: { active, inactive, indicator, inactiveIndicator, activeBorder, inactiveBorder }, 
+     textProps = {},
      textStyle = {},
      disabled = false
     } = this.props;
@@ -148,6 +149,7 @@ class ToggleSwitch extends React.Component {
                   },
                   textStyle
                 ]}
+                {...textProps}
               >
                 {on}
               </Text>
@@ -186,13 +188,15 @@ class ToggleSwitch extends React.Component {
             >
               <Text
                 style={[
-                {
-                  alignSelf: 'center', 
-                  textAlign: 'center',
-                  color: isActive ? activeTextColor : inactiveTextColor
-                },
-                textStyle
-              ]}>
+                  {
+                    alignSelf: 'center', 
+                    textAlign: 'center',
+                    color: isActive ? activeTextColor : inactiveTextColor
+                  },
+                  textStyle
+                ]}
+                {...textProps}
+              >
                 {off}
               </Text>
             </View>
