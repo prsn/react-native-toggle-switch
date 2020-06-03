@@ -51,7 +51,7 @@ class ToggleSwitch extends React.Component {
     this.setState({
       isActive: active
     }, () => {
-      this.props.onValueChange(active);
+      this.props.onValueChange && this.props.onValueChange(active);
     });
   }
 
