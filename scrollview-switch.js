@@ -9,30 +9,47 @@ import {
   Platform
 } from 'react-native';
 
+const textMargin = 8
+
 class ToggleSwitch extends React.Component {
-  constructor(...props) {
-    super(...props);
+  constructor(props) {
+    super(props);
+
+    const universalPadding = this.props.padding || 2
+
     this.state = {
-      isActive: this.props.active || false
+      isActive: this.props.active || false,
+      isLaidOut: Platform.OS === 'ios',
+      borderWidth: 2,
+      universalPadding,
+      viewPortRadius: this.props.radius + universalPadding,
+      viewPortWidth: this.props.width + (2 * this.props.radius) + (2 * universalPadding) + textMargin,
+      contentOffset: this.props.active ? 0 : this.props.width + textMargin
     };
-    this.borderWidth = 2;
-    this.universalPadding = 2;
-    this.viewPortRadius =  this.props.radius +  this.universalPadding;
-    this.textMargin = 8;
-    this.viewPortWidth = this.props.width + (2 * this.props.radius) + (2 * this.universalPadding) + this.textMargin;
-    this.initailContentOffset = this.props.active ? 0 : this.props.width  + this.textMargin;
   }
 
-  async componentDidMount() {
-    if (!this.props.active && Platform.OS === 'android') {
-      // Android hack to push scroll view to end at the initial rendering...
-      this.intervalRef = setInterval(() => {
-        if (this.scrollRef) {
-          this.scrollRef.scrollToEnd({ animated: false });
-          clearInterval(this.intervalRef);
-        }
-      }, 10);
+  componentDidUpdate(prevProps, prevState) {
+    const { active } = this.props
+    if (prevProps.active !== active) {
+      this.setState({
+        isActive: active,
+        contentOffset: active ? 0 : this.props.width + textMargin
+      })
+      //android fix sync scroll view position with state
+      if (active) {
+        this.scrollRef.scrollTo({ x: 0, y: 0, animated: false })
+      } else {
+        this.scrollRef.scrollToEnd({ animated: false });
+      }
     }
+  }
+
+  //android fix sync scroll view position with state
+  onScrollViewContentSizeChange = () => {
+    if (this.scrollRef && !this.state.isActive && Platform.OS === 'android') {
+      this.scrollRef.scrollToEnd({ animated: false });
+    }
+    this.setState({ isLaidOut: true })
   }
 
   setScrollViewRef = (ref) => this.scrollRef = ref
@@ -43,7 +60,7 @@ class ToggleSwitch extends React.Component {
     this.setState({
       isActive: active
     }, () => {
-      this.props.onValueChange(active);
+      this.props.onValueChange && this.props.onValueChange(active);
     });
   }
 
@@ -60,41 +77,52 @@ class ToggleSwitch extends React.Component {
 
   onDragEnd = (e) => {
     const { contentOffset } = e.nativeEvent;
-    if(contentOffset.x > (this.props.width ) / 2) {
+    if (contentOffset.x > (this.props.width ) / 2) {
       this.scrollRef.scrollToEnd();
       this.updateState(false);
     } else {
       this.scrollRef.scrollTo({x: 0, y: 0, animated: true})
       this.updateState(true);
     }
-    this.touchableOpacity.setOpacityTo(1, 300);
+    //fix for https://github.com/facebook/react-native/issues/29272#issuecomment-653514316
+    if (this.touchableOpacity.setOpacityTo != undefined) {
+      this.touchableOpacity.setOpacityTo(1, 300);
+    } else if (this.touchableOpacity._setOpacityTo != undefined) {
+      this.touchableOpacity._setOpacityTo(1, 300);
+    }
   }
 
   onDragStart = (e) => {
-    this.touchableOpacity.setOpacityTo(0.5, 300);
+    //fix for https://github.com/facebook/react-native/issues/29272#issuecomment-653514316
+    if (this.touchableOpacity.setOpacityTo != undefined) {
+      this.touchableOpacity.setOpacityTo(0.5, 300);
+    } else if (this.touchableOpacity._setOpacityTo != undefined) {
+      this.touchableOpacity._setOpacityTo(0.5, 300);
+    }
   }
 
   render() {
     const { text: { on = 'ON', off = 'OFF', activeTextColor, inactiveTextColor },
-     color: { active, inactive, indicator, activeBorder, inactiveBorder }, 
+     color: { active, inactive, indicator, inactiveIndicator, activeBorder, inactiveBorder }, 
+     textProps = {},
      textStyle = {},
      disabled = false
     } = this.props;
-    const { isActive } = this.state;
+    const { isActive, isLaidOut, borderWidth, universalPadding, viewPortRadius, viewPortWidth, contentOffset } = this.state;
     
     return (
-      <TouchableOpacity  onPress={this.toggleSwitch} activeOpacity={1} ref = {this.setTouchableRef} disabled={disabled}>
+      <TouchableOpacity onPress={this.toggleSwitch} activeOpacity={1} ref={this.setTouchableRef} disabled={disabled}>
       <View
         style={[
           styles.viewPort,
           { 
-            width: this.viewPortWidth,
-            height: this.props.radius * 2 +  this.universalPadding * 2,
+            width: viewPortWidth,
+            height: this.props.radius * 2 + universalPadding * 2,
             opacity: 1,
-            borderRadius: this.viewPortRadius,
-            borderWidth: this.borderWidth,
+            borderRadius: viewPortRadius,
+            borderWidth,
             borderColor: isActive ? activeBorder : inactiveBorder,
-            backgroundColor: isActive? active: inactive
+            backgroundColor: isActive ? active : inactive
           }
         ]}
       >
@@ -106,16 +134,17 @@ class ToggleSwitch extends React.Component {
           onScrollBeginDrag={this.onDragStart}
           scrollEnabled={!disabled}
           scrollsToTop={false}
-          contentOffset={{x: this.initailContentOffset, y: 0}}
-          style={{ width: this.viewPortWidth }}
+          contentOffset={{x: contentOffset, y: 0}}
+          onContentSizeChange={this.onScrollViewContentSizeChange}
+          style={{ width: viewPortWidth }}
         >
           <View
             style={[
               styles.container,
               { 
                 opacity: 1,
-                backgroundColor: isActive? active: inactive,
-                height:  this.props.radius * 2 +  this.universalPadding * 2 
+                backgroundColor: isActive? active : inactive,
+                height:  this.props.radius * 2 + universalPadding * 2
               }
             ]}
           >
@@ -124,7 +153,8 @@ class ToggleSwitch extends React.Component {
                 styles.activeView,
                 { 
                   width: this.props.width,
-                  // marginLeft: this.viewPortRadius
+                  opacity: isLaidOut ? 1 : 0,
+                  // marginLeft: viewPortRadius
                 }
               ]}
             >
@@ -137,6 +167,7 @@ class ToggleSwitch extends React.Component {
                   },
                   textStyle
                 ]}
+                {...textProps}
               >
                 {on}
               </Text>
@@ -147,13 +178,14 @@ class ToggleSwitch extends React.Component {
                   styles.indicatorWrapper,
                   {
                     justifyContent: isActive ? 'flex-end' : 'flex-start',
-                    padding: this.universalPadding 
+                    padding: universalPadding,
+                    opacity: isLaidOut ? 1 : 0,
                   }
                 ]}>
                 <View
                   style={[
                     styles.indicator,
-                    { backgroundColor: indicator, 
+                    { backgroundColor: isActive ? indicator : inactiveIndicator || indicator, 
                       borderColor: isActive ? active : inactive,
                       width: this.props.radius * 2,
                       height: this.props.radius * 2,
@@ -167,19 +199,22 @@ class ToggleSwitch extends React.Component {
               style={[
                 styles.inactiveView,
                 { width: this.props.width,
-                  // marginRight: this.viewPortRadius
+                  opacity: isLaidOut ? 1 : 0,
+                  // marginRight: viewPortRadius
                 }
               ]}
             >
               <Text
                 style={[
-                {
-                  alignSelf: 'center', 
-                  textAlign: 'center',
-                  color: isActive ? activeTextColor : inactiveTextColor
-                },
-                textStyle
-              ]}>
+                  {
+                    alignSelf: 'center', 
+                    textAlign: 'center',
+                    color: isActive ? activeTextColor : inactiveTextColor
+                  },
+                  textStyle
+                ]}
+                {...textProps}
+              >
                 {off}
               </Text>
             </View>
